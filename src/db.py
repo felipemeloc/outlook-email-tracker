@@ -13,7 +13,12 @@ Contains the following function:
 * sql_to_df: Return a DataFrame base on a SQLquery. use:
 
     import db
-    db.sql_to_df(query)
+    db.sql_to_df(query='YOUR QUERY')
+
+*  df_to_sql: SQL data insertion into the table emails_information table. use:
+
+    import db
+    db.df_to_sql(df= YOUR_DATAFRAME)
 """
 
 import os
@@ -66,11 +71,16 @@ def sql_to_df(query:str, use_live:bool=False)->pd.DataFrame:
     conn = get_conn(use_live)
     return pd.read_sql_query(query, conn)
 
-def df_to_sql(df:pd.DataFrame):
+def df_to_sql(df:pd.DataFrame)->None:
+    """Function to make a SQL data insertion into the table emails_information table
+
+    Args:
+        df (pd.DataFrame): Dataframe with the information to be injected
+    """    
     conn = get_conn()
     cursor = conn.cursor()
     # Insert Dataframe into SQL Server:
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
         cursor.execute("""INSERT INTO [dbo].[emails_information]
         (email_id,
         conversation_id,
